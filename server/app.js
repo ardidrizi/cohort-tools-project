@@ -1,10 +1,13 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const PORT = 5005;
-const students = require("./students.json");
-const cohorts = require("./cohorts.json");
+const Student = require("./models/Students.model");
+const Cohort = require("./models/Cohorts.model");
+// const students = require("./students.json");
+// const cohorts = require("./cohorts.json");
 
 // STATIC DATA
 // Devs Team - Import the provided files with JSON data of students and cohorts here:
@@ -30,12 +33,30 @@ app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
 
-app.get("/api/students", (req, res) => {
-  res.json(students);
+app.get("/api/cohorts/", (req, res) => {
+  try {
+    Cohort.find().then((cohorts) => {
+      res.status(200).json(cohorts);
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching cohorts", error });
+  }
 });
 
-app.get("/api/cohorts/", (req, res) => {
-  res.json(cohorts);
+app.get("/api/students", (req, res) => {
+  try {
+    Student.find().then((students) => {
+      res.status(200).json(students);
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Error fetching students", error });
+  }
+});
+
+mongoose.connect("mongodb://127.0.0.1:27017/cohort-tools-api").then((x) => {
+  console.log(
+    `Connected to the database Database name: "${x.connections[0].name}"`
+  );
 });
 
 // START SERVER
