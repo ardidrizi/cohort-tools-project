@@ -104,9 +104,11 @@ app.delete("/api/cohorts/:cohortId", async (req, res) => {
 // Retrives all students in the database collection
 app.get("/api/students", (req, res) => {
   try {
-    Student.find().then((students) => {
-      res.status(200).json(students);
-    });
+    Student.find()
+      .populate("cohort")
+      .then((students) => {
+        res.status(200).json(students);
+      });
   } catch (error) {
     res.status(500).json({ message: "Error fetching students", error });
   }
@@ -130,9 +132,11 @@ app.get("/api/students/cohort/:cohortId", async (req, res) => {
   console.log(cohortId);
 
   try {
-    await Student.find({ cohort: cohortId }).then((students) => {
-      res.status(200).json(students);
-    });
+    await Student.find({ cohort: cohortId })
+      .populate("cohort")
+      .then((students) => {
+        res.status(200).json(students);
+      });
   } catch (error) {
     res.status(500).json({ message: "Error fetching students", error });
   }
@@ -143,9 +147,11 @@ app.get("/api/students/:studentId", async (req, res) => {
   const { studentId } = req.params;
 
   try {
-    await Student.findById({ _id: studentId }).then((student) => {
-      res.status(200).json(student);
-    });
+    await Student.findById({ _id: studentId })
+      .populate("cohort")
+      .then((student) => {
+        res.status(200).json(student);
+      });
   } catch (error) {
     res.status(500).json({ message: "Error fetching student", error });
   }
