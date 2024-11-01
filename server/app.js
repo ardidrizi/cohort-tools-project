@@ -193,6 +193,9 @@ mongoose.connect("mongodb://127.0.0.1:27017/cohort-tools-api").then((x) => {
   );
 });
 
+// ERROR HANDLING
+require("./error-handling/index")(app);
+
 // START SERVER
 app.listen(PORT, () => {
   console.log(`Server listening on port ${PORT}`);
