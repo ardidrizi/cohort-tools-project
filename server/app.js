@@ -26,6 +26,9 @@ app.use(express.static("public"));
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+const authRoutes = require("./routes/auth.routes");
+app.use("/auth", authRoutes);
+
 // ROUTES - https://expressjs.com/en/starter/basic-routing.html
 // Devs Team - Start working on the routes here:
 // ...
@@ -33,29 +36,13 @@ app.get("/docs", (req, res) => {
   res.sendFile(__dirname + "/views/docs.html");
 });
 
+const cohortRouter = require("./routes/cohort.routes");
+
 // Retrives all cohorts in the database collection
-app.get("/api/cohorts/", (req, res) => {
-  try {
-    Cohort.find().then((cohorts) => {
-      res.status(200).json(cohorts);
-    });
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching cohorts", error });
-  }
-});
+app.use("/api", cohortRouter);
 
 // Creates a new cohort in the database collection
-app.post("/api/cohorts", async (req, res) => {
-  try {
-    await Cohort.create(req.body).then((cohort) => {
-      console.log(cohort);
-      res.status(201).json(cohort);
-    });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Error creating cohort", error });
-  }
-});
+// app.use("/api", cohortRouter);
 
 // Retrieves a specific cohort by id
 app.get("/api/cohorts/:cohortId", async (req, res) => {
