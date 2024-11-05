@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
-const PORT = 5005;
+require("dotenv").config();
 
 // STATIC DATA
 // Devs Team - Import the provided files with JSON data of students and cohorts here:
@@ -15,7 +15,11 @@ const app = express();
 // MIDDLEWARE
 // Research Team - Set up CORS middleware here:
 // ...
-app.use(cors());
+app.use(
+  cors({
+    origin: ["http://localhost:5173"],
+  })
+);
 app.use(express.json());
 app.use(morgan("dev"));
 app.use(express.static("public"));
@@ -40,6 +44,10 @@ const studentRouter = require("./routes/students.route");
 
 app.use("/api", studentRouter);
 
+const userRouter = require("./routes/user.route");
+
+app.use("/api", userRouter);
+
 // DATABASE CONNECTION
 mongoose.connect("mongodb://127.0.0.1:27017/cohort-tools-api").then((x) => {
   console.log(
@@ -51,6 +59,6 @@ mongoose.connect("mongodb://127.0.0.1:27017/cohort-tools-api").then((x) => {
 require("./error-handling/index")(app);
 
 // START SERVER
-app.listen(PORT, () => {
-  console.log(`Server listening on port ${PORT}`);
+app.listen(process.env.PORT, () => {
+  console.log(`Server listening on port ${process.env.PORT}`);
 });
