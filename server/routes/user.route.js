@@ -5,10 +5,10 @@ const userRouter = express.Router();
 
 // /api/users/:id
 userRouter.get("/users/:id", verifyJWT, async (req, res) => {
-  const { id } = req.payload;
+  const { _id } = req.payload;
 
   try {
-    const user = await User.findOne({ _id: id });
+    const user = await User.findOne({ _id: _id });
     res.status(200).json(user);
   } catch (error) {
     console.error(error);
