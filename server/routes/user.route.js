@@ -8,7 +8,7 @@ userRouter.get("/users/:id", verifyJWT, async (req, res) => {
   const { _id } = req.payload;
 
   try {
-    const user = await User.findOne({ _id: _id });
+    const user = await User.findOne({ _id });
     res.status(200).json(user);
   } catch (error) {
     console.error(error);
